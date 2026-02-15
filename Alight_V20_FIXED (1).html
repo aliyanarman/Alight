@@ -1,0 +1,3234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            padding: 40px 20px 140px 20px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: -0.01em;
+        }
+
+        .calculator-title {
+            font-size: 24px;
+            font-weight: 590;
+            color: #ffffff;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+
+        .label {
+            font-size: 15px;
+            font-weight: 510;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: -0.01em;
+        }
+
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 590;
+            color: #ffffff;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        .comparison-item-label {
+            font-size: 13px;
+            font-weight: 510;
+            color: #cccccc;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .comparison-item-value {
+            font-size: 24px;
+            font-weight: 590;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .result-label {
+            font-size: 15px;
+            font-weight: 510;
+            color: #cccccc;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .result-secondary {
+            font-size: 18px;
+            font-weight: 500;
+            color: #cccccc;
+            margin-top: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: -0.01em;
+        }
+
+        .industry-selector {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .industry-select {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 510;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23ffffff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .industry-select option {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.98), rgba(20, 20, 20, 0.98));
+            color: #ffffff;
+            padding: 12px 16px;
+            font-weight: 400;
+            border: none;
+        }
+
+        .industry-select:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .industry-select:focus {
+            outline: none;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.15));
+            border-color: rgba(255, 255, 255, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                        0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .calculator-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 32px;
+            padding: 48px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+            margin-bottom: 32px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .calculator-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 32px;
+            letter-spacing: -0.01em;
+        }
+
+        .input-group {
+            margin-bottom: 32px;
+        }
+
+        .label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 10px;
+            display: block;
+            letter-spacing: -0.01em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(204, 204, 204, 0.15), rgba(204, 204, 204, 0.1));
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(204, 204, 204, 0.3);
+            border-radius: 20px;
+            padding: 18px 20px;
+            font-size: 17px;
+            font-weight: 500;
+            color: #ffffff;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .input:hover {
+            background: linear-gradient(135deg, rgba(204, 204, 204, 0.2), rgba(204, 204, 204, 0.15));
+            border-color: rgba(204, 204, 204, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .input:focus {
+            outline: none;
+            background: linear-gradient(135deg, rgba(204, 204, 204, 0.25), rgba(204, 204, 204, 0.2));
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+                        0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .input::placeholder {
+            color: #cccccc;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            color: #ffffff;
+            pointer-events: none;
+        }
+
+        .input-with-prefix {
+            padding-left: 36px;
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 17px;
+            font-weight: 500;
+            color: #cccccc;
+            pointer-events: none;
+        }
+
+        .input-with-suffix {
+            padding-right: 56px;
+        }
+
+        .calculate-btn {
+            display: inline-block;
+            width: auto;
+            padding: 18px 48px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 590;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            letter-spacing: -0.01em;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 1px 0 rgba(255, 255, 255, 0.25) inset,
+                        0 -1px 0 rgba(0, 0, 0, 0.25) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .calculate-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.18));
+            border-color: rgba(255, 255, 255, 0.45);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.8),
+                        0 1px 0 rgba(255, 255, 255, 0.35) inset,
+                        0 -1px 0 rgba(0, 0, 0, 0.25) inset;
+        }
+
+        .calculate-btn:hover::before {
+            left: 100%;
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6),
+                        0 1px 0 rgba(255, 255, 255, 0.25) inset;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 32px;
+        }
+
+        .results {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results.show {
+            margin-top: 48px;
+            padding-top: 48px;
+            border-top: 1.5px solid rgba(255, 255, 255, 0.1);
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .result-main {
+            margin-bottom: 32px;
+        }
+
+        .result-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #cccccc;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .result-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+        }
+
+        .result-secondary {
+            font-size: 18px;
+            font-weight: 500;
+            color: #cccccc;
+            margin-top: 8px;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, rgba(204, 204, 204, 0.08), rgba(204, 204, 204, 0.05));
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1.5px solid rgba(204, 204, 204, 0.15);
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .comparison-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .comparison-item:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.08));
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .comparison-item-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #cccccc;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .comparison-item-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .comparison-status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        /* Monochrome status colors */
+        .status-excellent {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(34, 197, 94, 0.15));
+            color: #22c55e;
+            border: 2px solid rgba(34, 197, 94, 0.4);
+            font-weight: 600;
+        }
+
+        .status-good {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(34, 197, 94, 0.1));
+            color: #22c55e;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            font-weight: 600;
+        }
+
+        .status-average {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(251, 191, 36, 0.15));
+            color: #fbbf24;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+            font-weight: 600;
+        }
+
+        .status-poor {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(239, 68, 68, 0.15));
+            color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.4);
+            font-weight: 600;
+        }
+
+        /* Tooltip on hover */
+        .comparison-status-tooltip {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #ffffff;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .comparison-status:hover + .comparison-status-tooltip,
+        .comparison-status:hover ~ .comparison-status-tooltip {
+            opacity: 1;
+            bottom: -50px;
+        }
+
+        /* Executive Decision Badges */
+        .executive-decision {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            min-height: 50px;
+            min-width: 180px;
+        }
+
+        .decision-go {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+            color: #22c55e;
+            border: 2px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .decision-caution {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.1));
+            color: #fbbf24;
+            border: 2px solid rgba(251, 191, 36, 0.4);
+        }
+
+        .decision-pass {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .quality-score {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 14px 24px;
+            min-height: 50px;
+            min-width: 100px;
+        }
+
+        .quality-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .quality-label {
+            font-size: 12px;
+            color: #cccccc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .quick-metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-metric {
+            text-align: center;
+        }
+
+        .quick-metric-label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .quick-metric-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .liquid-glass-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 24px;
+            padding: 20px 24px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .market-analysis-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 24px;
+            flex: 1.8;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .metrics-ribbon {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
+            backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 28px 32px;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 32px;
+            align-items: center;
+            margin-bottom: 24px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4),
+                        0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .ribbon-metric {
+            text-align: center;
+        }
+
+        .ribbon-metric-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .ribbon-metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .performance-chart-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 20px;
+            width: 240px;
+            height: 240px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .minimalist-layout {
+            display: flex;
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .deal-link {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 510;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .deal-link:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.15));
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Quadrant Chart Styles */
+        .quadrant-chart {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quadrant-title {
+            font-size: 13px;
+            font-weight: 510;
+            color: #cccccc;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .quadrant-grid {
+            position: relative;
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .quadrant {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .quadrant:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+        }
+
+        .quadrant.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .quadrant-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .quadrant.active .quadrant-label {
+            color: #ffffff;
+            font-weight: 590;
+        }
+
+        .deal-marker {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.5),
+                        0 0 24px rgba(255, 255, 255, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% { 
+                transform: scale(1.15);
+                opacity: 0.9;
+            }
+        }
+
+        .axis-label {
+            position: absolute;
+            font-size: 11px;
+            font-weight: 510;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.02em;
+        }
+
+        .axis-label.y-axis {
+            top: 50%;
+            left: -8px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: center;
+        }
+
+        .axis-label.x-axis {
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .quadrant-info {
+            margin-top: 16px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 12px;
+            color: #cccccc;
+            text-align: center;
+        }
+
+        /* Scenario Builder & Deal Memory Styles */
+        .scenario-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .scenario-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 510;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .scenario-btn.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.18));
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .save-deal-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 24px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 590;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .save-deal-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.15));
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .saved-deals-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.98), rgba(10, 10, 10, 0.98));
+            backdrop-filter: blur(40px);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.8);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 32px 24px;
+        }
+
+        .saved-deals-panel.open {
+            right: 0;
+        }
+
+        .saved-deal-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .saved-deal-item:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-4px);
+        }
+
+        .saved-deal-name {
+            font-size: 15px;
+            font-weight: 590;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .saved-deal-meta {
+            font-size: 12px;
+            color: #cccccc;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .close-panel-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-panel-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .scenario-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+
+        .scenario-column {
+            text-align: center;
+        }
+
+        .scenario-column-header {
+            font-size: 12px;
+            font-weight: 590;
+            color: #cccccc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .scenario-column.bear .scenario-column-header {
+            color: #ff6b6b;
+        }
+
+        .scenario-column.base .scenario-column-header {
+            color: #4ecdc4;
+        }
+
+        .scenario-column.bull .scenario-column-header {
+            color: #95e1d3;
+        }
+
+        .scenario-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .scenario-detail {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .export-btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 510;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #cccccc;
+            font-size: 15px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1.5px solid rgba(255, 193, 7, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ffc107;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 30px;
+            z-index: 1000;
+        }
+
+        .confidential-text {
+            font-size: 15px;
+            font-weight: 400;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        .copyright-text {
+            font-size: 12px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 0;
+            text-align: center;
+        }
+
+        .bottom-nav {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 60px;
+            padding: 12px 20px;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #cccccc;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 510;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-indicator {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
+            border-radius: 40px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        .calculator-module {
+            display: none;
+        }
+
+        .calculator-module.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scenario Comparison Styles */
+        .scenario-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 6px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50px;
+            width: fit-content;
+        }
+
+        .scenario-btn {
+            padding: 10px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 510;
+            color: #cccccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-btn.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .scenario-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scenario-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-card.active {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+        }
+
+        .scenario-card-title {
+            font-size: 12px;
+            font-weight: 590;
+            color: #cccccc;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .scenario-card.active .scenario-card-title {
+            color: #ffffff;
+        }
+
+        .scenario-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .scenario-detail {
+            font-size: 12px;
+            color: #999999;
+        }
+
+        /* Deal Memory / Save Styles */
+        .deal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 510;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Saved Deals Sidebar */
+        .saved-deals-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            height: 100vh;
+            width: 400px;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(10, 10, 10, 0.95));
+            backdrop-filter: blur(40px);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 32px 24px;
+            overflow-y: auto;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .saved-deals-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .close-panel {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .close-panel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .saved-deal-item {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .saved-deal-item:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-4px);
+        }
+
+        .saved-deal-name {
+            font-size: 15px;
+            font-weight: 590;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .saved-deal-meta {
+            font-size: 12px;
+            color: #999999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .saved-deal-value {
+            font-size: 13px;
+            color: #cccccc;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        /* Sensitivity Slider */
+        .sensitivity-control {
+            margin-top: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+        }
+
+        .sensitivity-label {
+            font-size: 13px;
+            font-weight: 510;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sensitivity-value {
+            color: #cccccc;
+        }
+
+        .sensitivity-slider {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(to right, 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0.2), 
+                rgba(255, 255, 255, 0.1));
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .sensitivity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .sensitivity-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .scenario-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .saved-deals-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Alight</h1>
+            <p class="subtitle">Calculate your deal on feet</p>
+            <div class="industry-selector">
+                <select class="industry-select" id="industrySelect">
+                    <option value="real-estate">Real Estate</option>
+                    <option value="tech">Technology</option>
+                    <option value="retail">Retail & Food</option>
+                    <option value="manufacturing">Manufacturing</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="finance">Financial Services</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Future Value Calculator -->
+        <div class="calculator-module active" id="futureValue">
+            <div class="calculator-card">
+                <h2 class="calculator-title">Future Value Calculator</h2>
+                
+                <div class="input-group">
+                    <label class="label">What's the current value?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="currentValue" placeholder="500,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What's the yearly growth rate?</label>
+                    <div class="input-wrapper">
+                        <input type="text" inputmode="numeric" class="input input-with-suffix" id="growthRate" placeholder="5" step="0.1">
+                        <span class="input-suffix">%</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">How many years from now?</label>
+                    <div class="input-wrapper">
+                        <input type="text" inputmode="numeric" class="input input-with-suffix" id="years" placeholder="10">
+                        <span class="input-suffix">years</span>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="calculate-btn" onclick="calculateFutureValue()">Calculate Future Value</button>
+                </div>
+
+                <div class="results" id="futureValueResults">
+                    <div class="scenario-controls">
+                        <button class="scenario-btn active" onclick="switchScenario('base')">Base</button>
+                        <button class="scenario-btn" onclick="switchScenario('bull')">Bull</button>
+                        <button class="scenario-btn" onclick="switchScenario('bear')">Bear</button>
+                        <div style="flex: 1"></div>
+                        <select class="industry-select" id="countrySelect" onchange="recalculateCurrentTab()" style="width: auto; padding: 10px 35px 10px 16px;">
+                            <option value="US">United States</option>
+                            <option value="PK">Pakistan</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AE">UAE</option>
+                        </select>
+                    </div>
+
+                    <div class="result-main">
+                        <div class="result-label">Estimated Value in <span id="yearsResult">10</span> Years</div>
+                        <div class="result-value" id="futureValueAmount">$0</div>
+                        <div class="result-secondary">Total Growth: <span id="totalGrowth">$0</span> (<span id="percentGrowth">0%</span>)</div>
+                    </div>
+
+                    <div class="comparison-section" id="futureValueComparison">
+                        <h3 class="comparison-title">Industry Comparison</h3>
+                        <div id="futureValueComparisonContent"></div>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="exportToMemo()">
+                            Export Memo
+                        </button>
+                        <button class="export-btn" onclick="resetToBase()">
+                            Reset to Base
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deal ROI Calculator -->
+        <div class="calculator-module" id="dealROI">
+            <div class="calculator-card">
+                <h2 class="calculator-title">Deal ROI Calculator</h2>
+                
+                <div class="input-group">
+                    <label class="label">How much are you buying it for?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="purchasePrice" placeholder="50,000,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What's the annual profit (EBITDA)?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="ebitda" placeholder="6,250,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">When do you plan to sell? (years)</label>
+                    <div class="input-wrapper">
+                        <input type="text" inputmode="numeric" class="input input-with-suffix" id="exitYears" placeholder="5">
+                        <span class="input-suffix">years</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What multiple can you sell at?</label>
+                    <div class="input-wrapper">
+                        <input type="text" inputmode="numeric" class="input input-with-suffix" id="exitMultiple" placeholder="12" step="0.1">
+                        <span class="input-suffix">x EBITDA</span>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="calculate-btn" onclick="calculateDealROI()">Calculate Returns</button>
+                </div>
+
+                <div class="results" id="dealROIResults">
+                    <div class="scenario-controls">
+                        <button class="scenario-btn active" onclick="switchScenario('base')">Base Case</button>
+                        <button class="scenario-btn" onclick="switchScenario('bull')">Bull +30%</button>
+                        <button class="scenario-btn" onclick="switchScenario('bear')">Bear -25%</button>
+                        <div style="flex: 1"></div>
+                        <select class="industry-select" id="countrySelectROI" onchange="recalculateCurrentTab()" style="width: auto; padding: 10px 35px 10px 16px;">
+                            <option value="US">United States</option>
+                            <option value="PK">Pakistan</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AE">UAE</option>
+                        </select>
+                    </div>
+
+                    <div class="result-main">
+                        <div class="result-label">Your Return (IRR)</div>
+                        <div class="result-value" id="irrValue">0%</div>
+                        <div class="result-secondary">Total Return: <span id="moicValue">0x</span> • Exit Value: <span id="exitValue">$0</span></div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h3 class="comparison-title">Deal Quality</h3>
+                        <div id="dealROIComparison"></div>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button class="export-btn" onclick="exportToMemo()">
+                            Export Memo
+                        </button>
+                        <button class="export-btn" onclick="resetToBase()">
+                            Reset to Base
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breakeven Calculator -->
+        <div class="calculator-module" id="breakeven">
+            <div class="calculator-card">
+                <h2 class="calculator-title">Breakeven Calculator</h2>
+                
+                <div class="input-group">
+                    <label class="label">What are your fixed costs? (monthly)</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="fixedCosts" placeholder="100,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What do you sell each unit for?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="pricePerUnit" placeholder="50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What does each unit cost you?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="costPerUnit" placeholder="20">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="calculate-btn" onclick="calculateBreakeven()">Calculate Breakeven</button>
+                </div>
+
+                <div class="results" id="breakevenResults">
+                    <div class="result-main">
+                        <div class="result-label">Units Needed to Breakeven</div>
+                        <div class="result-value" id="breakevenUnits">0</div>
+                        <div class="result-secondary">Revenue needed: <span id="breakevenRevenue">$0</span> per month</div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h3 class="comparison-title">Business Economics</h3>
+                        <!-- Three KPIs in Ribbon -->
+                        <div class="metrics-ribbon">
+                            <div class="ribbon-metric">
+                                <div class="ribbon-metric-label">Profit Margin</div>
+                                <div class="ribbon-metric-value" id="profitMarginValue">0%</div>
+                            </div>
+                            <div class="liquid-glass-box" style="margin: 0;">
+                                <div class="quick-metric-label" style="margin-bottom: 8px;">At Volume</div>
+                                <div class="quick-metric-value" style="font-size: 28px;" id="atVolumeValue">0</div>
+                            </div>
+                            <div class="ribbon-metric">
+                                <div class="ribbon-metric-label">Contribution/Unit</div>
+                                <div class="ribbon-metric-value" id="contributionValue">$0</div>
+                            </div>
+                        </div>
+
+                        <!-- Analysis Box -->
+                        <div class="market-analysis-box" style="margin-top: 24px;">
+                            <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.3px;">ANALYSIS</div>
+                            <div style="font-size: 14px; line-height: 1.7; color: #e0e0e0;" id="breakevenAnalysis"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Valuation Calculator -->
+        <div class="calculator-module" id="valuation">
+            <div class="calculator-card">
+                <h2 class="calculator-title">What's My Company Worth?</h2>
+                
+                <div class="input-group">
+                    <label class="label">What's your annual revenue?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="revenue" placeholder="10,000,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">What's your annual profit (EBITDA)?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="valuationEbitda" placeholder="2,500,000">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="calculate-btn" onclick="calculateValuation()">Calculate Valuation</button>
+                </div>
+
+                <div class="results" id="valuationResults">
+                    <div class="scenario-controls">
+                        <div style="flex: 1"></div>
+                        <select class="industry-select" id="countrySelectValuation" onchange="calculateValuation()" style="width: auto; padding: 10px 35px 10px 16px;">
+                            <option value="US">United States</option>
+                            <option value="PK">Pakistan</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AE">UAE</option>
+                        </select>
+                    </div>
+
+                    <div class="result-main">
+                        <div class="result-label">Estimated Company Value</div>
+                        <div class="result-value" id="companyValue">$0</div>
+                        <div class="result-secondary">Based on industry averages</div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h3 class="comparison-title">Valuation Analysis</h3>
+                        <div id="valuationComparison"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payback Period Calculator -->
+        <div class="calculator-module" id="payback">
+            <div class="calculator-card">
+                <h2 class="calculator-title">Investment Payback Calculator</h2>
+                
+                <div class="input-group">
+                    <label class="label">How much does this investment cost?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="investmentCost" placeholder="2,000,000">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="label">How much will you save/earn per year?</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">$</span>
+                        <input type="text" inputmode="numeric" class="input input-with-prefix" id="annualSavings" placeholder="600,000">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button class="calculate-btn" onclick="calculatePayback()">Calculate Payback</button>
+                </div>
+
+                <div class="results" id="paybackResults">
+                    <div class="scenario-controls">
+                        <div style="flex: 1"></div>
+                        <select class="industry-select" id="countrySelectPayback" onchange="calculatePayback()" style="width: auto; padding: 10px 35px 10px 16px;">
+                            <option value="US">United States</option>
+                            <option value="PK">Pakistan</option>
+                            <option value="UK">United Kingdom</option>
+                            <option value="AE">UAE</option>
+                        </select>
+                    </div>
+
+                    <div class="result-main">
+                        <div class="result-label">Payback Period</div>
+                        <div class="result-value" id="paybackPeriod">0</div>
+                        <div class="result-secondary">Annual ROI: <span id="paybackROI">0%</span></div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h3 class="comparison-title">5-Year Projection</h3>
+                        <div id="paybackComparison"></div>
+                    </div>
+
+                    <div class="comparison-section">
+                        <h3 class="comparison-title">Inflation-Adjusted Analysis</h3>
+                        <div id="inflationAdjustedSection">
+                            <!-- Metrics Ribbon with 3 KPIs -->
+                            <div class="metrics-ribbon">
+                                <div class="ribbon-metric">
+                                    <div class="ribbon-metric-label">Inflation Rate</div>
+                                    <div class="ribbon-metric-value" id="inflationRate">0%</div>
+                                </div>
+                                <div class="liquid-glass-box" style="margin: 0;">
+                                    <div class="quick-metric-label" style="margin-bottom: 8px;">Real Value</div>
+                                    <div class="quick-metric-value" style="font-size: 28px;" id="realValue">$0</div>
+                                </div>
+                                <div class="ribbon-metric">
+                                    <div class="ribbon-metric-label">Purchasing Power</div>
+                                    <div class="ribbon-metric-value" id="purchasingPower">100%</div>
+                                </div>
+                            </div>
+
+                            <!-- Value Analysis Box -->
+                            <div class="market-analysis-box" style="margin-top: 24px;">
+                                <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.3px;">VALUE ANALYSIS</div>
+                                <div style="font-size: 14px; line-height: 1.7; color: #e0e0e0;" id="inflationExplanation"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saved Deals Panel -->
+    <div class="saved-deals-panel" id="savedDealsPanel">
+        <div class="panel-header">
+            <div class="panel-title">Saved Deals</div>
+            <button class="close-panel" onclick="toggleSavedDealsPanel()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        <div id="savedDealsList"></div>
+    </div>
+
+    <!-- Saved Deals Panel -->
+    <div class="saved-deals-panel" id="savedDealsPanel">
+        <button class="close-panel-btn" onclick="toggleSavedDeals()">✕</button>
+        <h2 style="font-size: 24px; font-weight: 600; color: #ffffff; margin-bottom: 24px;">Saved Deals</h2>
+        <div id="savedDealsContainer"></div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav-wrapper">
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="switchCalculator('futureValue', this)">Future Value</button>
+            <button class="nav-btn" onclick="switchCalculator('dealROI', this)">Deal ROI</button>
+            <button class="nav-btn" onclick="switchCalculator('breakeven', this)">Breakeven</button>
+            <button class="nav-btn" onclick="switchCalculator('valuation', this)">Valuation</button>
+            <button class="nav-btn" onclick="switchCalculator('payback', this)">Payback</button>
+        </div>
+        <div class="confidential-text">Confidential Preview - Not for distribution</div>
+        <div class="copyright-text">© 2026 Aliyan Arman. All rights reserved.</div>
+    </div>
+
+    <script>
+        // User's detected country and market data
+        let userCountry = 'US'; // Will be auto-detected
+        let userMarket = 'United States';
+
+        // Geographic-specific market data
+        const marketData = {
+            'US': {
+                name: 'United States',
+                currency: 'USD',
+                avgInflation: 2.8, // 10-year average inflation rate
+                'real-estate': { avgGrowth: 4.2, goodGrowth: 6.0, excellentGrowth: 8.0, avgMultiple: 15, goodMultiple: 18, avgMargin: 25 },
+                'tech': { avgGrowth: 12.5, goodGrowth: 18.0, excellentGrowth: 25.0, avgMultiple: 20, goodMultiple: 30, avgMargin: 35 },
+                'retail': { avgGrowth: 3.8, goodGrowth: 6.5, excellentGrowth: 10.0, avgMultiple: 8, goodMultiple: 12, avgMargin: 15 },
+                'manufacturing': { avgGrowth: 5.2, goodGrowth: 8.0, excellentGrowth: 12.0, avgMultiple: 10, goodMultiple: 14, avgMargin: 20 },
+                'healthcare': { avgGrowth: 6.8, goodGrowth: 10.0, excellentGrowth: 15.0, avgMultiple: 12, goodMultiple: 16, avgMargin: 22 },
+                'finance': { avgGrowth: 7.5, goodGrowth: 11.0, excellentGrowth: 16.0, avgMultiple: 14, goodMultiple: 18, avgMargin: 30 }
+            },
+            'PK': {
+                name: 'Pakistan',
+                currency: 'PKR',
+                avgInflation: 11.2, // 10-year average inflation rate
+                'real-estate': { avgGrowth: 8.5, goodGrowth: 12.0, excellentGrowth: 15.0, avgMultiple: 10, goodMultiple: 14, avgMargin: 30 },
+                'tech': { avgGrowth: 18.0, goodGrowth: 25.0, excellentGrowth: 35.0, avgMultiple: 12, goodMultiple: 18, avgMargin: 40 },
+                'retail': { avgGrowth: 7.2, goodGrowth: 10.5, excellentGrowth: 15.0, avgMultiple: 6, goodMultiple: 9, avgMargin: 18 },
+                'manufacturing': { avgGrowth: 9.5, goodGrowth: 14.0, excellentGrowth: 20.0, avgMultiple: 8, goodMultiple: 12, avgMargin: 22 },
+                'healthcare': { avgGrowth: 11.0, goodGrowth: 16.0, excellentGrowth: 22.0, avgMultiple: 9, goodMultiple: 13, avgMargin: 25 },
+                'finance': { avgGrowth: 10.5, goodGrowth: 15.0, excellentGrowth: 20.0, avgMultiple: 10, goodMultiple: 14, avgMargin: 28 }
+            },
+            'UK': {
+                name: 'United Kingdom',
+                currency: 'GBP',
+                avgInflation: 2.5, // 10-year average inflation rate
+                'real-estate': { avgGrowth: 3.5, goodGrowth: 5.5, excellentGrowth: 7.5, avgMultiple: 16, goodMultiple: 20, avgMargin: 23 },
+                'tech': { avgGrowth: 10.5, goodGrowth: 16.0, excellentGrowth: 22.0, avgMultiple: 18, goodMultiple: 28, avgMargin: 33 },
+                'retail': { avgGrowth: 2.8, goodGrowth: 5.0, excellentGrowth: 8.0, avgMultiple: 7, goodMultiple: 11, avgMargin: 14 },
+                'manufacturing': { avgGrowth: 4.2, goodGrowth: 7.0, excellentGrowth: 10.0, avgMultiple: 9, goodMultiple: 13, avgMargin: 19 },
+                'healthcare': { avgGrowth: 5.5, goodGrowth: 8.5, excellentGrowth: 12.0, avgMultiple: 11, goodMultiple: 15, avgMargin: 21 },
+                'finance': { avgGrowth: 6.8, goodGrowth: 10.0, excellentGrowth: 14.0, avgMultiple: 13, goodMultiple: 17, avgMargin: 29 }
+            },
+            'AE': {
+                name: 'UAE',
+                currency: 'AED',
+                avgInflation: 1.8, // 10-year average inflation rate
+                'real-estate': { avgGrowth: 6.5, goodGrowth: 9.5, excellentGrowth: 13.0, avgMultiple: 12, goodMultiple: 16, avgMargin: 28 },
+                'tech': { avgGrowth: 15.0, goodGrowth: 22.0, excellentGrowth: 30.0, avgMultiple: 16, goodMultiple: 24, avgMargin: 38 },
+                'retail': { avgGrowth: 5.5, goodGrowth: 8.5, excellentGrowth: 12.0, avgMultiple: 7, goodMultiple: 10, avgMargin: 17 },
+                'manufacturing': { avgGrowth: 7.2, goodGrowth: 11.0, excellentGrowth: 15.0, avgMultiple: 9, goodMultiple: 13, avgMargin: 21 },
+                'healthcare': { avgGrowth: 8.5, goodGrowth: 13.0, excellentGrowth: 18.0, avgMultiple: 10, goodMultiple: 14, avgMargin: 24 },
+                'finance': { avgGrowth: 9.0, goodGrowth: 13.5, excellentGrowth: 18.0, avgMultiple: 12, goodMultiple: 16, avgMargin: 31 }
+            }
+        };
+
+        // Detect user's country on page load
+        async function detectUserCountry() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                userCountry = data.country_code || 'US';
+                userMarket = data.country_name || 'United States';
+                
+                // If country not in our data, default to US
+                if (!marketData[userCountry]) {
+                    userCountry = 'US';
+                    userMarket = 'United States';
+                }
+                
+                console.log('Detected market:', userMarket);
+            } catch (error) {
+                console.log('Using default market: United States');
+                userCountry = 'US';
+                userMarket = 'United States';
+            }
+        }
+
+        // Get industry data for user's market
+        function getIndustryData(industry) {
+            // Check which country selector is available (different calculators have different IDs)
+            let selectedCountry = 'US';
+            if (document.getElementById('countrySelect')) {
+                selectedCountry = document.getElementById('countrySelect').value;
+            } else if (document.getElementById('countrySelectROI')) {
+                selectedCountry = document.getElementById('countrySelectROI').value;
+            } else if (document.getElementById('countrySelectValuation')) {
+                selectedCountry = document.getElementById('countrySelectValuation').value;
+            } else if (document.getElementById('countrySelectPayback')) {
+                selectedCountry = document.getElementById('countrySelectPayback').value;
+            }
+            
+            const market = marketData[selectedCountry] || marketData['US'];
+            const data = market[industry];
+            return {
+                ...data,
+                name: industry.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+                market: market.name,
+                countryCode: selectedCountry
+            };
+        }
+
+        // Recalculate when country changes
+        function recalculateCurrentTab() {
+            const activeCalc = document.querySelector('.calculator-module.active');
+            if (!activeCalc) return;
+
+            if (activeCalc.id === 'futureValue') calculateFutureValue();
+            else if (activeCalc.id === 'dealROI') calculateDealROI();
+            else if (activeCalc.id === 'valuation') calculateValuation();
+        }
+
+        // Generate labeled radar chart with indicator names
+        function generateLabeledRadarChart(profitability, risk, dealType) {
+            // Calculate scores for different dimensions (0-100 scale)
+            let qualityScore, growthScore, riskScore, marketScore;
+            
+            if (dealType === 'roi') {
+                qualityScore = Math.min(100, (profitability / 30) * 100);
+                growthScore = Math.min(100, (profitability / 25) * 100);
+                riskScore = profitability >= 20 ? 80 : profitability >= 15 ? 60 : 40;
+                marketScore = profitability >= 20 ? 90 : profitability >= 15 ? 70 : 50;
+            } else if (dealType === 'growth') {
+                qualityScore = Math.min(100, (profitability / 15) * 100);
+                growthScore = Math.min(100, (profitability / 20) * 100);
+                riskScore = profitability <= 15 && profitability >= 5 ? 75 : 60;
+                marketScore = Math.min(100, (profitability / 12) * 100);
+            } else if (dealType === 'valuation') {
+                qualityScore = Math.min(100, (profitability / 35) * 100);
+                growthScore = Math.min(100, (profitability / 30) * 100);
+                riskScore = profitability >= 20 ? 80 : 60;
+                marketScore = Math.min(100, (profitability / 25) * 100);
+            }
+            
+            // 4-point chart (removed Upside)
+            const points = [
+                { angle: 0, value: qualityScore, label: 'Quality' },
+                { angle: 90, value: growthScore, label: 'Growth' },
+                { angle: 180, value: marketScore, label: 'Market' },
+                { angle: 270, value: riskScore, label: 'Risk' }
+            ];
+            
+            const center = 100;  // Center point
+            const radius = 50;   // Chart radius
+            const labelRadius = radius + 35;  // Distance for labels (50 + 35 = 85 from center)
+            
+            const polygonPoints = points.map(p => {
+                const angleRad = (p.angle - 90) * Math.PI / 180;
+                const r = (p.value / 100) * radius;
+                const x = center + r * Math.cos(angleRad);
+                const y = center + r * Math.sin(angleRad);
+                return `${x},${y}`;
+            }).join(' ');
+            
+            const gridPoints = points.map(p => {
+                const angleRad = (p.angle - 90) * Math.PI / 180;
+                const x = center + radius * Math.cos(angleRad);
+                const y = center + radius * Math.sin(angleRad);
+                return `${x},${y}`;
+            }).join(' ');
+            
+            return `
+                <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; text-align: center; letter-spacing: 0.3px;">PERFORMANCE</div>
+                <svg width="200" height="200" viewBox="0 0 200 200" style="display: block; margin: 0 auto;">
+                    <!-- Background grid -->
+                    <polygon points="${gridPoints}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    
+                    <!-- Axis lines -->
+                    ${points.map(p => {
+                        const angleRad = (p.angle - 90) * Math.PI / 180;
+                        const x = center + radius * Math.cos(angleRad);
+                        const y = center + radius * Math.sin(angleRad);
+                        return `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>`;
+                    }).join('')}
+                    
+                    <!-- Performance polygon -->
+                    <polygon points="${polygonPoints}" 
+                             fill="rgba(34, 197, 94, 0.2)" 
+                             stroke="#22c55e" 
+                             stroke-width="2"/>
+                    
+                    <!-- Center point -->
+                    <circle cx="${center}" cy="${center}" r="2" fill="#ffffff" opacity="0.5"/>
+                    
+                    <!-- Value points -->
+                    ${points.map(p => {
+                        const angleRad = (p.angle - 90) * Math.PI / 180;
+                        const r = (p.value / 100) * radius;
+                        const x = center + r * Math.cos(angleRad);
+                        const y = center + r * Math.sin(angleRad);
+                        return `<circle cx="${x}" cy="${y}" r="3" fill="#22c55e" stroke="#ffffff" stroke-width="1"/>`;
+                    }).join('')}
+                    
+                    <!-- Labels - positioned to be fully visible with extra padding -->
+                    ${points.map(p => {
+                        const angleRad = (p.angle - 90) * Math.PI / 180;
+                        const x = center + labelRadius * Math.cos(angleRad);
+                        const y = center + labelRadius * Math.sin(angleRad) + 5;
+                        return `<text x="${x}" y="${y}" text-anchor="middle" fill="#cccccc" font-size="12" font-weight="600">${p.label}</text>`;
+                    }).join('')}
+                </svg>
+            `;
+        }
+
+        // Keep old function for backward compatibility with other calculators
+        function generateQuadrantChart(profitability, risk, dealType) {
+            return generateLabeledRadarChart(profitability, risk, dealType);
+        }
+        async function fetchSimilarDeals(industry, dealType, dealSize = null) {
+            try {
+                // For production: Use real news API with deal size context
+                return getContextualDealNews(industry, userMarket, dealType, dealSize);
+            } catch (error) {
+                return getContextualDealNews(industry, userMarket, dealType, dealSize);
+            }
+        }
+
+        function getContextualDealNews(industry, market, dealType, dealSize) {
+            // Create deals categorized by size (small <$100M, medium $100M-$1B, large >$1B)
+            const dealCategory = dealSize ? 
+                (dealSize < 100000000 ? 'small' : dealSize < 1000000000 ? 'medium' : 'large') : 
+                'medium';
+
+            const dealsByMarket = {
+                'US': {
+                    'tech': {
+                        small: { title: 'Y Combinator startup acquired for $45M', source: 'TechCrunch', url: 'https://techcrunch.com' },
+                        medium: { title: 'Series C fintech startup acquired for $420M', source: 'VentureBeat', url: 'https://venturebeat.com' },
+                        large: { title: 'Microsoft acquires AI platform for $2.1B', source: 'Bloomberg', url: 'https://bloomberg.com' }
+                    },
+                    'real-estate': {
+                        small: { title: 'Local REIT acquires retail center for $75M', source: 'CoStar', url: 'https://costar.com' },
+                        medium: { title: 'Office tower portfolio sold for $650M', source: 'Commercial Observer', url: 'https://commercialobserver.com' },
+                        large: { title: 'Blackstone completes $3.5B data center acquisition', source: 'WSJ', url: 'https://wsj.com' }
+                    },
+                    'retail': {
+                        small: { title: 'Regional grocery chain sold for $85M', source: 'Supermarket News', url: 'https://supermarketnews.com' },
+                        medium: { title: 'Restaurant group acquisition for $340M', source: 'Nation\'s Restaurant News', url: 'https://nrn.com' },
+                        large: { title: 'Amazon expands grocery footprint with $890M deal', source: 'Reuters', url: 'https://reuters.com' }
+                    },
+                    'finance': {
+                        small: { title: 'Fintech platform acquired for $62M', source: 'American Banker', url: 'https://americanbanker.com' },
+                        medium: { title: 'Regional bank merger valued at $480M', source: 'S&P Global', url: 'https://spglobal.com' },
+                        large: { title: 'JPMorgan acquires payments company for $1.2B', source: 'CNBC', url: 'https://cnbc.com' }
+                    },
+                    'healthcare': {
+                        small: { title: 'Telehealth startup acquired for $55M', source: 'MedCity News', url: 'https://medcitynews.com' },
+                        medium: { title: 'Hospital network merger valued at $720M', source: 'Modern Healthcare', url: 'https://modernhealthcare.com' },
+                        large: { title: 'CVS Health acquires clinic network for $1.8B', source: 'Healthcare Dive', url: 'https://healthcaredive.com' }
+                    },
+                    'manufacturing': {
+                        small: { title: 'Industrial supplier sold for $68M', source: 'Industry Week', url: 'https://industryweek.com' },
+                        medium: { title: 'Automation firm acquisition for $425M', source: 'Manufacturing.net', url: 'https://manufacturing.net' },
+                        large: { title: 'GE completes $950M industrial robotics deal', source: 'Forbes', url: 'https://forbes.com' }
+                    }
+                },
+                'PK': {
+                    'tech': {
+                        small: { title: 'Local e-commerce startup raises PKR 800M', source: 'Profit by Pakistan Today', url: 'https://profit.pakistantoday.com.pk' },
+                        medium: { title: 'Careem invests PKR 4.2B in logistics firm', source: 'Dawn', url: 'https://dawn.com' },
+                        large: { title: 'TikTok parent invests PKR 15B in Pakistani tech', source: 'The News', url: 'https://thenews.com.pk' }
+                    },
+                    'real-estate': {
+                        small: { title: 'Plaza acquisition in Lahore for PKR 1.5B', source: 'Zameen Blog', url: 'https://zameen.com' },
+                        medium: { title: 'Commercial tower sold for PKR 5.8B', source: 'ProPakistani', url: 'https://propakistani.pk' },
+                        large: { title: 'Emaar acquires Karachi development for PKR 12B', source: 'Business Recorder', url: 'https://brecorder.com' }
+                    },
+                    'retail': {
+                        small: { title: 'Fashion retailer chain sold for PKR 900M', source: 'Images Dawn', url: 'https://images.dawn.com' },
+                        medium: { title: 'Hypermarket acquisition valued at PKR 3.2B', source: 'The Express Tribune', url: 'https://tribune.com.pk' },
+                        large: { title: 'Daraz parent invests PKR 8.5B in expansion', source: 'TechJuice', url: 'https://techjuice.pk' }
+                    },
+                    'finance': {
+                        small: { title: 'Microfinance firm acquired for PKR 750M', source: 'Fikr-e-Falah', url: 'https://fikr-e-falah.com' },
+                        medium: { title: 'Digital bank raises PKR 4.8B Series B', source: 'The Nation', url: 'https://nation.com.pk' },
+                        large: { title: 'Bank Alfalah acquires payment firm for PKR 11B', source: 'Daily Times', url: 'https://dailytimes.com.pk' }
+                    },
+                    'healthcare': {
+                        small: { title: 'Diagnostic lab chain sold for PKR 680M', source: 'Health Magazine Pakistan', url: '#' },
+                        medium: { title: 'Private hospital network merger PKR 5.5B', source: 'Medical News Pakistan', url: '#' },
+                        large: { title: 'Aga Khan Hospital invests PKR 9B in expansion', source: 'Dawn', url: 'https://dawn.com' }
+                    },
+                    'manufacturing': {
+                        small: { title: 'Textile mill acquisition for PKR 1.2B', source: 'Textile Today', url: '#' },
+                        medium: { title: 'Steel manufacturer sold for PKR 6.5B', source: 'Business Recorder', url: 'https://brecorder.com' },
+                        large: { title: 'Lucky Cement completes PKR 18B merger', source: 'The News', url: 'https://thenews.com.pk' }
+                    }
+                }
+            };
+
+            const marketDeals = dealsByMarket[userCountry] || dealsByMarket['US'];
+            const industryDeals = marketDeals[industry] || marketDeals['tech'];
+            return industryDeals[dealCategory] || industryDeals.medium;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function formatNumberWithCommas(value) {
+            // Remove all non-digits
+            let num = value.replace(/\D/g, '');
+            // Add commas
+            return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function addCommaFormatting(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            
+            input.addEventListener('input', function(e) {
+                // Get the current value and remove all non-digits
+                let value = this.value.replace(/\D/g, '');
+                
+                // Store cursor position relative to end
+                let cursorFromEnd = this.value.length - this.selectionStart;
+                
+                // Format the number
+                if (value.length > 0) {
+                    this.value = formatNumberWithCommas(value);
+                } else {
+                    this.value = '';
+                }
+                
+                // Restore cursor position from end
+                let newPosition = this.value.length - cursorFromEnd;
+                this.setSelectionRange(newPosition, newPosition);
+            });
+        }
+
+        // Add comma formatting to all number inputs on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const numberInputs = [
+                'currentValue', 'growthRate', 'years',
+                'purchasePrice', 'ebitda', 'exitYears', 'exitMultiple',
+                'fixedCosts', 'pricePerUnit', 'costPerUnit',
+                'revenue', 'valuationEbitda',
+                'investmentCost', 'annualSavings'
+            ];
+            
+            numberInputs.forEach(id => addCommaFormatting(id));
+        });
+
+        function switchCalculator(calcId, button) {
+            // Hide all calculators
+            document.querySelectorAll('.calculator-module').forEach(calc => {
+                calc.classList.remove('active');
+            });
+            
+            // Hide all results sections
+            document.querySelectorAll('.results').forEach(result => {
+                result.classList.remove('show');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected calculator
+            document.getElementById(calcId).classList.add('active');
+            button.classList.add('active');
+            
+            // Hide/show industry selector with animation based on calculator
+            const industrySelector = document.querySelector('.industry-selector');
+            if (calcId === 'breakeven') {
+                // Hide industry selector for breakeven calculator
+                industrySelector.style.opacity = '0';
+                industrySelector.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    industrySelector.style.display = 'none';
+                }, 300);
+            } else {
+                // Show industry selector for other calculators
+                industrySelector.style.display = 'flex';
+                setTimeout(() => {
+                    industrySelector.style.opacity = '1';
+                    industrySelector.style.transform = 'translateY(0)';
+                }, 10);
+            }
+            
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Future Value Calculator
+        function calculateFutureValue() {
+            const currentValue = parseFloat(document.getElementById('currentValue').value.replace(/,/g, ''));
+            const growthRate = parseFloat(document.getElementById('growthRate').value.replace(/,/g, ''));
+            const years = parseInt(document.getElementById('years').value.replace(/,/g, ''));
+            const industry = document.getElementById('industrySelect').value;
+
+            if (!currentValue || !growthRate || !years) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const futureValue = currentValue * Math.pow(1 + (growthRate / 100), years);
+            const totalGrowth = futureValue - currentValue;
+            const percentGrowth = ((futureValue - currentValue) / currentValue * 100).toFixed(1);
+
+            document.getElementById('yearsResult').textContent = years;
+            document.getElementById('futureValueAmount').textContent = formatCurrency(futureValue);
+            document.getElementById('totalGrowth').textContent = formatCurrency(totalGrowth);
+            document.getElementById('percentGrowth').textContent = percentGrowth;
+
+            const resultsDiv = document.getElementById('futureValueResults');
+            resultsDiv.classList.add('show');
+
+            generateFutureValueComparison(growthRate, industry, currentValue);
+            
+            // Auto-scroll to results after a brief delay for animation
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function generateFutureValueComparison(userGrowth, industryKey, dealSize) {
+            const industry = getIndustryData(industryKey);
+            const currentValue = parseFloat(document.getElementById('currentValue').value.replace(/,/g, ''));
+            const years = parseInt(document.getElementById('years').value.replace(/,/g, ''));
+            const futureValue = currentValue * Math.pow(1 + (userGrowth / 100), years);
+            
+            // Executive Metrics
+            const totalGrowthDollars = futureValue - currentValue;
+            const annualizedReturn = userGrowth;
+            
+            // Growth Quality Score (1-10)
+            let qualityScore = 5;
+            if (userGrowth >= industry.excellentGrowth) qualityScore += 3;
+            else if (userGrowth >= industry.goodGrowth) qualityScore += 2;
+            else if (userGrowth >= industry.avgGrowth) qualityScore += 1;
+            else if (userGrowth < industry.avgGrowth - 3) qualityScore -= 2;
+            
+            if (years <= 5 && userGrowth >= industry.goodGrowth) qualityScore += 1;
+            else if (years > 10 && userGrowth < industry.avgGrowth) qualityScore -= 1;
+            
+            qualityScore = Math.max(1, Math.min(10, qualityScore));
+            
+            // Executive Decision
+            let decision, decisionClass, decisionText;
+            if (userGrowth >= industry.excellentGrowth) {
+                decision = 'OUTPERFORMER';
+                decisionClass = 'decision-go';
+                decisionText = 'Exceptional trajectory';
+            } else if (userGrowth >= industry.avgGrowth) {
+                decision = 'ON PACE';
+                decisionClass = 'decision-caution';
+                decisionText = 'Market-aligned growth';
+            } else {
+                decision = 'LAGGING';
+                decisionClass = 'decision-pass';
+                decisionText = 'Below expectations';
+            }
+            
+            // Concise market analysis with elite vocabulary
+            let marketAnalysis = '';
+            const vsAvg = userGrowth - industry.avgGrowth;
+            const vsTop = userGrowth - industry.excellentGrowth;
+            
+            if (userGrowth >= industry.excellentGrowth) {
+                marketAnalysis = `Your ${userGrowth.toFixed(1)}% growth outpaces ${industry.market}'s ${industry.name} leaders (${industry.excellentGrowth}%). This trajectory positions you in the top decile. The delta to market average (+${vsAvg.toFixed(1)}pp) reflects exceptional execution. Momentum is strong.`;
+            } else if (userGrowth >= industry.goodGrowth) {
+                marketAnalysis = `At ${userGrowth.toFixed(1)}%, you're tracking above ${industry.market}'s ${industry.name} median (${industry.avgGrowth}%). Solid performance, but ${Math.abs(vsTop).toFixed(1)}pp below top performers. Room to accelerate toward the ${industry.excellentGrowth}% benchmark.`;
+            } else if (userGrowth >= industry.avgGrowth) {
+                marketAnalysis = `Your ${userGrowth.toFixed(1)}% matches ${industry.market} sector norms (${industry.avgGrowth}%). Steady, but undifferentiated. Market leaders grow at ${industry.excellentGrowth}%—a ${Math.abs(vsTop).toFixed(1)}pp gap. Consider strategic pivots to close this.`;
+            } else {
+                marketAnalysis = `At ${userGrowth.toFixed(1)}%, you're ${Math.abs(vsAvg).toFixed(1)}pp below ${industry.market}'s ${industry.name} average (${industry.avgGrowth}%). This underperformance warrants immediate attention. Top quartile players achieve ${industry.excellentGrowth}%—realignment is critical.`;
+            }
+
+            // Generate labeled radar chart
+            const radarChart = generateLabeledRadarChart(userGrowth, dealSize, 'growth');
+            
+            document.getElementById('futureValueComparisonContent').innerHTML = `
+                <!-- Darker Ribbon with Metrics -->
+                <div class="metrics-ribbon">
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Quality Score</div>
+                        <div class="ribbon-metric-value">${qualityScore}/10</div>
+                    </div>
+                    <div class="liquid-glass-box" style="margin: 0;">
+                        <div class="quick-metric-label" style="margin-bottom: 8px;">Total Gain</div>
+                        <div class="quick-metric-value" style="font-size: 28px;">${formatCurrency(totalGrowthDollars)}</div>
+                    </div>
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Annual Growth</div>
+                        <div class="ribbon-metric-value">${annualizedReturn.toFixed(1)}%</div>
+                        <div style="font-size: 10px; color: #666; margin-top: 4px;">(Compound)</div>
+                    </div>
+                </div>
+
+                <!-- Performance Rating & Score - Same size, aligned -->
+                <div style="display: flex; justify-content: center; align-items: stretch; gap: 16px; margin-bottom: 32px;">
+                    <div class="executive-decision ${decisionClass}" style="min-width: 180px; display: flex; align-items: center; justify-content: center;">
+                        ${decision}
+                    </div>
+                    <div class="quality-score" style="min-width: 100px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="quality-number">${qualityScore}</span>
+                        <span class="quality-label">/ 10</span>
+                    </div>
+                </div>
+
+                <!-- Market Benchmarks -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Average Growth</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">${industry.avgGrowth.toFixed(1)}%</div>
+                        <div style="font-size: 11px; color: #ccc; line-height: 1.4;">The average for ${industry.name} is ${industry.avgGrowth.toFixed(1)}% in ${industry.market}</div>
+                    </div>
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Top Performers</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">${industry.excellentGrowth.toFixed(1)}%</div>
+                        <div style="font-size: 11px; color: #ccc; line-height: 1.4;">Market leaders in ${industry.name} achieve ${industry.excellentGrowth.toFixed(1)}%</div>
+                    </div>
+                </div>
+
+                <!-- Minimalist Layout: Market Analysis + Performance Chart -->
+                <div class="minimalist-layout">
+                    <div class="market-analysis-box">
+                        <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.3px;">MARKET POSITIONING</div>
+                        <div style="font-size: 14px; line-height: 1.7; color: #e0e0e0;">
+                            ${marketAnalysis}
+                        </div>
+                    </div>
+                    
+                    <div class="performance-chart-box">
+                        ${radarChart}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Deal ROI Calculator
+        function calculateDealROI() {
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value.replace(/,/g, ''));
+            const ebitda = parseFloat(document.getElementById('ebitda').value.replace(/,/g, ''));
+            const exitYears = parseInt(document.getElementById('exitYears').value.replace(/,/g, ''));
+            const exitMultiple = parseFloat(document.getElementById('exitMultiple').value.replace(/,/g, ''));
+            const industry = document.getElementById('industrySelect').value;
+
+            if (!purchasePrice || !ebitda || !exitYears || !exitMultiple) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const exitValue = ebitda * exitMultiple;
+            const totalReturn = exitValue / purchasePrice;
+            const irr = (Math.pow(totalReturn, 1/exitYears) - 1) * 100;
+
+            document.getElementById('irrValue').textContent = irr.toFixed(1) + '%';
+            document.getElementById('moicValue').textContent = totalReturn.toFixed(1) + 'x';
+            document.getElementById('exitValue').textContent = formatCurrency(exitValue);
+
+            const resultsDiv = document.getElementById('dealROIResults');
+            resultsDiv.classList.add('show');
+
+            generateDealROIComparison(irr, totalReturn, industry, purchasePrice);
+            
+            // Auto-scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function saveDealROI() {
+            saveDeal(); // Use the unified save function
+        }
+
+        function exportDealMemo() {
+            exportToMemo(); // Use the unified export function
+        }
+
+        function switchScenario(scenario, calculatorType) {
+            // This old function is replaced by the new switchScenario
+        }
+
+        function generateDealROIComparison(irr, moic, industryKey, dealSize) {
+            const industry = getIndustryData(industryKey);
+            
+            // Calculate executive metrics
+            const purchasePrice = parseFloat(document.getElementById('purchasePrice').value.replace(/,/g, ''));
+            const ebitda = parseFloat(document.getElementById('ebitda').value.replace(/,/g, ''));
+            const exitYears = parseInt(document.getElementById('exitYears').value.replace(/,/g, ''));
+            const exitValue = ebitda * parseFloat(document.getElementById('exitMultiple').value.replace(/,/g, ''));
+            
+            // Cash-on-Cash Return (total cash profit as %)
+            const cashReturn = ((exitValue - purchasePrice) / purchasePrice * 100);
+            
+            // Simple Payback Period (years to recover investment)
+            const annualCashFlow = ebitda; // Simplified: using EBITDA as proxy for cash flow
+            const paybackPeriod = purchasePrice / annualCashFlow;
+            
+            // Deal Quality Score (1-10)
+            let qualityScore = 5; // Base score
+            if (irr >= 25) qualityScore += 3;
+            else if (irr >= 20) qualityScore += 2;
+            else if (irr >= 15) qualityScore += 1;
+            else if (irr < 10) qualityScore -= 2;
+            
+            if (moic >= 3.0) qualityScore += 2;
+            else if (moic >= 2.5) qualityScore += 1;
+            else if (moic < 2.0) qualityScore -= 1;
+            
+            if (paybackPeriod <= 3) qualityScore += 1;
+            else if (paybackPeriod > 5) qualityScore -= 1;
+            
+            qualityScore = Math.max(1, Math.min(10, qualityScore)); // Clamp between 1-10
+            
+            // Executive Decision
+            let decision, decisionClass, decisionText;
+            if (irr >= 20 && moic >= 2.5 && paybackPeriod <= 4) {
+                decision = 'GO';
+                decisionClass = 'decision-go';
+                decisionText = 'Strong deal fundamentals';
+            } else if (irr >= 15 && moic >= 2.0) {
+                decision = 'CAUTION';
+                decisionClass = 'decision-caution';
+                decisionText = 'Acceptable returns, review risks';
+            } else {
+                decision = 'PASS';
+                decisionClass = 'decision-pass';
+                decisionText = 'Returns below investment threshold';
+            }
+            
+            let irrStatus, moicStatus;
+            
+            if (irr >= 25) {
+                irrStatus = { class: 'status-excellent', text: 'Excellent', tooltip: 'Outstanding returns - well above PE targets' };
+            } else if (irr >= 18) {
+                irrStatus = { class: 'status-good', text: 'Good', tooltip: 'Solid returns meeting PE standards' };
+            } else if (irr >= 12) {
+                irrStatus = { class: 'status-average', text: 'Average', tooltip: 'Acceptable but below typical PE hurdle rate' };
+            } else {
+                irrStatus = { class: 'status-poor', text: 'Below Target', tooltip: 'Returns do not justify PE risk profile' };
+            }
+
+            if (moic >= 3.0) {
+                moicStatus = { class: 'status-excellent', text: 'Strong', tooltip: 'Triple your money - exceptional multiple' };
+            } else if (moic >= 2.0) {
+                moicStatus = { class: 'status-average', text: 'Decent', tooltip: 'Doubling investment - reasonable outcome' };
+            } else {
+                moicStatus = { class: 'status-poor', text: 'Weak', tooltip: 'Low multiple - high risk for modest gain' };
+            }
+
+            // Elite market analysis
+            let marketAnalysis = '';
+            const vsTarget = irr - 20; // vs 20% PE target
+            
+            if (irr >= 25 && moic >= 3.0) {
+                marketAnalysis = `Your ${irr.toFixed(1)}% IRR with ${moic.toFixed(1)}x MOIC exceeds institutional PE standards. This ${vsTarget >= 0 ? '+' + vsTarget.toFixed(1) : vsTarget.toFixed(1)}pp premium to the 20% hurdle reflects strong deal structuring. The ${paybackPeriod.toFixed(1)}-year payback supports capital efficiency. Proceed.`;
+            } else if (irr >= 20 && moic >= 2.5) {
+                marketAnalysis = `At ${irr.toFixed(1)}% IRR (${moic.toFixed(1)}x), you're at the ${industry.market} PE threshold. Returns meet baseline requirements, though ${vsTarget > 0 ? 'just ' + vsTarget.toFixed(1) + 'pp above' : Math.abs(vsTarget).toFixed(1) + 'pp below'} the 20% target. Payback in ${paybackPeriod.toFixed(1)} years is workable. Review execution risks closely.`;
+            } else if (irr >= 15) {
+                marketAnalysis = `Your ${irr.toFixed(1)}% IRR falls ${Math.abs(vsTarget).toFixed(1)}pp short of the 20% PE standard. At ${moic.toFixed(1)}x, this underperforms typical buyout economics. The ${paybackPeriod.toFixed(1)}-year payback suggests capital is better deployed elsewhere. High bar for approval.`;
+            } else {
+                marketAnalysis = `At ${irr.toFixed(1)}% IRR (${moic.toFixed(1)}x), this materially underperforms the 20% PE hurdle by ${Math.abs(vsTarget).toFixed(1)}pp. Returns don't compensate for leverage and execution risk. ${paybackPeriod > 5 ? 'Extended ' + paybackPeriod.toFixed(1) + '-year payback compounds concerns.' : ''} Pass.`;
+            }
+            
+            const radarChart = generateLabeledRadarChart(irr, dealSize, 'roi');
+            
+            document.getElementById('dealROIComparison').innerHTML = `
+                <!-- Darker Ribbon with Metrics -->
+                <div class="metrics-ribbon">
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Quality Score</div>
+                        <div class="ribbon-metric-value">${qualityScore}/10</div>
+                    </div>
+                    <div class="liquid-glass-box" style="margin: 0;">
+                        <div class="quick-metric-label" style="margin-bottom: 8px;">Cash Return</div>
+                        <div class="quick-metric-value" style="font-size: 28px;">${cashReturn.toFixed(0)}%</div>
+                    </div>
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Payback Period</div>
+                        <div class="ribbon-metric-value">${paybackPeriod.toFixed(1)} yrs</div>
+                    </div>
+                </div>
+
+                <!-- Performance Rating & Score - Same size, aligned -->
+                <div style="display: flex; justify-content: center; align-items: stretch; gap: 16px; margin-bottom: 32px;">
+                    <div class="executive-decision ${decisionClass}">
+                        ${decision}
+                    </div>
+                    <div class="quality-score">
+                        <span class="quality-number">${qualityScore}</span>
+                        <span class="quality-label">/ 10</span>
+                    </div>
+                </div>
+
+                <!-- Market Benchmarks -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">IRR Target</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">20%+</div>
+                        <div style="font-size: 11px; color: #ccc; line-height: 1.4;">Standard PE hurdle rate in ${industry.market}</div>
+                    </div>
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">MOIC Target</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 6px;">2.5x+</div>
+                        <div style="font-size: 11px; color: #ccc; line-height: 1.4;">Minimum return multiple for buyout funds</div>
+                    </div>
+                </div>
+
+                <!-- Minimalist Layout: Market Analysis + Performance Chart -->
+                <div class="minimalist-layout">
+                    <div class="market-analysis-box">
+                        <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.3px;">DEAL ECONOMICS</div>
+                        <div style="font-size: 14px; line-height: 1.7; color: #e0e0e0;">
+                            ${marketAnalysis}
+                        </div>
+                    </div>
+                    
+                    <div class="performance-chart-box">
+                        ${radarChart}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Breakeven Calculator
+        function calculateBreakeven() {
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value.replace(/,/g, ''));
+            const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value.replace(/,/g, ''));
+            const costPerUnit = parseFloat(document.getElementById('costPerUnit').value.replace(/,/g, ''));
+
+            if (!fixedCosts || !pricePerUnit || !costPerUnit) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const contribution = pricePerUnit - costPerUnit;
+            const breakevenUnits = Math.ceil(fixedCosts / contribution);
+            const breakevenRevenue = breakevenUnits * pricePerUnit;
+            const profitMargin = (contribution / pricePerUnit * 100);
+
+            document.getElementById('breakevenUnits').textContent = breakevenUnits.toLocaleString();
+            document.getElementById('breakevenRevenue').textContent = formatCurrency(breakevenRevenue);
+
+            // Populate ribbon KPIs
+            document.getElementById('profitMarginValue').textContent = profitMargin.toFixed(1) + '%';
+            document.getElementById('atVolumeValue').textContent = breakevenUnits.toLocaleString();
+            document.getElementById('contributionValue').textContent = formatCurrency(contribution);
+
+            // Generate simple analysis
+            let analysis = '';
+            
+            if (profitMargin >= 50) {
+                analysis = `Your ${profitMargin.toFixed(0)}% margin is healthy. Each unit sold contributes ${formatCurrency(contribution)} toward covering your ${formatCurrency(fixedCosts)} monthly overhead. At ${breakevenUnits.toLocaleString()} units, you break even. Every unit beyond that is ${profitMargin.toFixed(0)}% profit. Strong unit economics.`;
+            } else if (profitMargin >= 30) {
+                analysis = `With a ${profitMargin.toFixed(0)}% margin, you need ${breakevenUnits.toLocaleString()} monthly sales to cover ${formatCurrency(fixedCosts)} in fixed costs. Each unit adds ${formatCurrency(contribution)} to the bottom line. Workable, but watch for price pressure eroding that ${formatCurrency(contribution)} cushion.`;
+            } else if (profitMargin >= 15) {
+                analysis = `Your ${profitMargin.toFixed(0)}% margin means tight unit economics. Breaking even at ${breakevenUnits.toLocaleString()} units requires consistent volume. The ${formatCurrency(contribution)} per-unit contribution leaves little room for discounting. Consider value-add opportunities to improve margins.`;
+            } else {
+                analysis = `At ${profitMargin.toFixed(0)}%, margins are razor-thin. You need ${breakevenUnits.toLocaleString()} units just to cover ${formatCurrency(fixedCosts)} overhead. With only ${formatCurrency(contribution)} contribution per unit, small cost increases or price cuts are dangerous. This model needs fundamental restructuring.`;
+            }
+
+            document.getElementById('breakevenAnalysis').textContent = analysis;
+
+            const resultsDiv = document.getElementById('breakevenResults');
+            resultsDiv.classList.add('show');
+            
+            // Auto-scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function generateBreakevenComparison(units, price, contribution, margin) {
+            const at150 = Math.ceil(units * 1.5);
+            const profitAt150 = (at150 - units) * contribution;
+            
+            document.getElementById('breakevenComparison').innerHTML = `
+                <div class="comparison-grid">
+                    <div class="comparison-item">
+                        <div class="comparison-item-label">Profit Margin</div>
+                        <div class="comparison-item-value">${margin.toFixed(1)}%</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-item-label">At 150% Volume</div>
+                        <div class="comparison-item-value">${at150.toLocaleString()} units</div>
+                        <div style="font-size: 13px; color: #cccccc; margin-top: 4px;">Profit: ${formatCurrency(profitAt150)}/mo</div>
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-item-label">Contribution/Unit</div>
+                        <div class="comparison-item-value">${formatCurrency(contribution)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Valuation Calculator
+        function calculateValuation() {
+            const revenue = parseFloat(document.getElementById('revenue').value.replace(/,/g, ''));
+            const ebitda = parseFloat(document.getElementById('valuationEbitda').value.replace(/,/g, ''));
+            const industry = document.getElementById('industrySelect').value;
+
+            if (!revenue || !ebitda) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const industryInfo = getIndustryData(industry);
+            const ebitdaMargin = (ebitda / revenue * 100);
+            const valuationLow = ebitda * (industryInfo.avgMultiple - 2);
+            const valuationMid = ebitda * industryInfo.avgMultiple;
+            const valuationHigh = ebitda * (industryInfo.avgMultiple + 3);
+
+            document.getElementById('companyValue').textContent = formatCurrency(valuationMid);
+
+            const resultsDiv = document.getElementById('valuationResults');
+            resultsDiv.classList.add('show');
+
+            generateValuationComparison(valuationLow, valuationMid, valuationHigh, ebitdaMargin, industryInfo, industry);
+            
+            // Auto-scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function generateValuationComparison(low, mid, high, margin, industry, industryKey) {
+            const revenue = parseFloat(document.getElementById('revenue').value.replace(/,/g, ''));
+            const ebitda = parseFloat(document.getElementById('valuationEbitda').value.replace(/,/g, ''));
+            
+            // EV/Revenue Multiple (executive metric for valuation efficiency)
+            const evToRevenue = mid / revenue;
+            
+            // Valuation Quality Score (1-10)
+            let qualityScore = 5;
+            if (margin >= industry.avgMargin + 5) qualityScore += 2;
+            else if (margin >= industry.avgMargin) qualityScore += 1;
+            else if (margin < industry.avgMargin - 5) qualityScore -= 2;
+            
+            if (evToRevenue >= 3) qualityScore += 2;
+            else if (evToRevenue >= 2) qualityScore += 1;
+            else if (evToRevenue < 1) qualityScore -= 1;
+            
+            qualityScore = Math.max(1, Math.min(10, qualityScore));
+            
+            // Executive Decision
+            let decision, decisionClass, decisionText;
+            if (margin >= industry.avgMargin + 3 && evToRevenue >= 2) {
+                decision = 'PREMIUM';
+                decisionClass = 'decision-go';
+                decisionText = 'Strong margins justify premium valuation';
+            } else if (margin >= industry.avgMargin - 2) {
+                decision = 'FAIR VALUE';
+                decisionClass = 'decision-caution';
+                decisionText = 'Market-appropriate valuation';
+            } else {
+                decision = 'UNDERPERFORMER';
+                decisionClass = 'decision-pass';
+                decisionText = 'Margins below par, valuation risk';
+            }
+            
+            let marginStatus;
+            if (margin >= industry.avgMargin + 5) {
+                marginStatus = { class: 'status-excellent', text: 'Strong', tooltip: 'Profit margins well above industry norm' };
+            } else if (margin >= industry.avgMargin) {
+                marginStatus = { class: 'status-average', text: 'Average', tooltip: 'Margins in line with industry standards' };
+            } else {
+                marginStatus = { class: 'status-poor', text: 'Weak', tooltip: 'Margins below industry average - room for improvement' };
+            }
+
+            // Elite market analysis
+            let marketAnalysis = '';
+            const vsAvg = margin - industry.avgMargin;
+            
+            if (margin >= industry.avgMargin + 5) {
+                marketAnalysis = `Your ${margin.toFixed(1)}% EBITDA margin exceeds ${industry.market}'s ${industry.name} average (${industry.avgMargin}%) by ${vsAvg.toFixed(1)}pp. This ${evToRevenue.toFixed(1)}x EV/Revenue multiple reflects strong operational discipline. At ${formatCurrency(mid)} valuation, you're positioned for premium exit multiples.`;
+            } else if (margin >= industry.avgMargin) {
+                marketAnalysis = `At ${margin.toFixed(1)}%, you're tracking with ${industry.market} ${industry.name} norms (${industry.avgMargin}%). The ${formatCurrency(mid)} valuation at ${evToRevenue.toFixed(1)}x revenue is fair. ${vsAvg > 0 ? '+' + vsAvg.toFixed(1) + 'pp upside' : 'Flat to market'} suggests room to optimize margins before exit.`;
+            } else {
+                marketAnalysis = `Your ${margin.toFixed(1)}% margin falls ${Math.abs(vsAvg).toFixed(1)}pp below ${industry.market}'s ${industry.name} benchmark (${industry.avgMargin}%). At ${formatCurrency(mid)} valuation, buyers will discount for margin risk. Focus on operational leverage to close this gap before seeking exits.`;
+            }
+            
+            const radarChart = generateLabeledRadarChart(margin, mid, 'valuation');
+
+            document.getElementById('valuationComparison').innerHTML = `
+                <!-- Darker Ribbon with Metrics -->
+                <div class="metrics-ribbon">
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Quality Score</div>
+                        <div class="ribbon-metric-value">${qualityScore}/10</div>
+                    </div>
+                    <div class="liquid-glass-box" style="margin: 0;">
+                        <div class="quick-metric-label" style="margin-bottom: 8px;">EBITDA Margin</div>
+                        <div class="quick-metric-value" style="font-size: 28px;">${margin.toFixed(1)}%</div>
+                    </div>
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">EV/Revenue</div>
+                        <div class="ribbon-metric-value">${evToRevenue.toFixed(1)}x</div>
+                    </div>
+                </div>
+
+                <!-- Performance Rating & Score - Same size, aligned -->
+                <div style="display: flex; justify-content: center; align-items: stretch; gap: 16px; margin-bottom: 32px;">
+                    <div class="executive-decision ${decisionClass}">
+                        ${decision}
+                    </div>
+                    <div class="quality-score">
+                        <span class="quality-number">${qualityScore}</span>
+                        <span class="quality-label">/ 10</span>
+                    </div>
+                </div>
+
+                <!-- Market Benchmarks -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Conservative</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #ffffff;">${formatCurrency(low)}</div>
+                    </div>
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Market Value</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #ffffff;">${formatCurrency(mid)}</div>
+                    </div>
+                    <div class="liquid-glass-box" style="padding: 16px 20px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #999; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Optimistic</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #ffffff;">${formatCurrency(high)}</div>
+                    </div>
+                </div>
+
+                <!-- Minimalist Layout: Market Analysis + Performance Chart -->
+                <div class="minimalist-layout">
+                    <div class="market-analysis-box">
+                        <div style="font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 12px; letter-spacing: 0.3px;">VALUATION ANALYSIS</div>
+                        <div style="font-size: 14px; line-height: 1.7; color: #e0e0e0;">
+                            ${marketAnalysis}
+                        </div>
+                    </div>
+                    
+                    <div class="performance-chart-box">
+                        ${radarChart}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Payback Calculator
+        function calculatePayback() {
+            const investmentCost = parseFloat(document.getElementById('investmentCost').value.replace(/,/g, ''));
+            const annualSavings = parseFloat(document.getElementById('annualSavings').value.replace(/,/g, ''));
+
+            if (!investmentCost || !annualSavings) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Get selected country's inflation rate
+            let selectedCountry = 'US';
+            if (document.getElementById('countrySelectPayback')) {
+                selectedCountry = document.getElementById('countrySelectPayback').value;
+            }
+            const market = marketData[selectedCountry] || marketData['US'];
+            const inflationRate = market.avgInflation;
+
+            const paybackYears = investmentCost / annualSavings;
+            const paybackMonths = paybackYears * 12;
+            const roi = (annualSavings / investmentCost * 100);
+
+            let displayText;
+            if (paybackYears < 1) {
+                displayText = paybackMonths.toFixed(1) + ' months';
+            } else {
+                displayText = paybackYears.toFixed(1) + ' years';
+            }
+
+            document.getElementById('paybackPeriod').textContent = displayText;
+            document.getElementById('paybackROI').textContent = roi.toFixed(1) + '%';
+
+            // Calculate inflation-adjusted real value
+            // NEW LOGIC: Principal + Total Income, THEN adjust for inflation
+            const totalIncomeNominal = annualSavings * paybackYears;
+            const totalPortfolioNominal = investmentCost + totalIncomeNominal; // Principal + Income
+            
+            // Adjust the total portfolio value for inflation using average inflation over the period
+            // Formula: Future Value / (1 + inflation)^years = Present Value
+            const averageInflationMultiplier = Math.pow(1 + (inflationRate / 100), paybackYears);
+            const realPortfolioValue = totalPortfolioNominal / averageInflationMultiplier;
+            
+            // How much purchasing power is lost
+            const inflationImpact = totalPortfolioNominal - realPortfolioValue;
+            const purchasingPowerRetained = (realPortfolioValue / totalPortfolioNominal * 100);
+
+            // Update inflation section
+            document.getElementById('inflationRate').textContent = inflationRate.toFixed(1) + '%';
+            document.getElementById('realValue').textContent = formatCurrency(realPortfolioValue);
+            document.getElementById('purchasingPower').textContent = purchasingPowerRetained.toFixed(0) + '%';
+            
+            document.getElementById('inflationExplanation').innerHTML = `
+                Principal: ${formatCurrency(investmentCost)} + Income over ${paybackYears.toFixed(1)} years: ${formatCurrency(totalIncomeNominal)} = <strong>${formatCurrency(totalPortfolioNominal)} total</strong>.
+                <br><br>At ${inflationRate}% avg. inflation in ${market.name}, this ${formatCurrency(totalPortfolioNominal)} will be worth <strong>${formatCurrency(realPortfolioValue)}</strong> in today's purchasing power.
+                <br><br>Inflation erodes ${formatCurrency(inflationImpact)} (${(100 - purchasingPowerRetained).toFixed(1)}%) of your wealth over this period.
+            `;
+
+            const resultsDiv = document.getElementById('paybackResults');
+            resultsDiv.classList.add('show');
+
+            generatePaybackComparison(investmentCost, annualSavings, paybackYears);
+            
+            // Auto-scroll to results
+            setTimeout(() => {
+                resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+        }
+
+        function generatePaybackComparison(cost, annual, years) {
+            const year3 = (annual * 3) - cost;
+            const year5 = (annual * 5) - cost;
+            const annualReturn = (annual/cost*100);
+            
+            let recommendation;
+            if (years <= 2) {
+                recommendation = { class: 'status-excellent', text: 'Quick payback - Strong investment', tooltip: 'Rapid return on capital - low risk investment' };
+            } else if (years <= 4) {
+                recommendation = { class: 'status-average', text: 'Moderate payback - Consider carefully', tooltip: 'Average payback period - standard risk profile' };
+            } else {
+                recommendation = { class: 'status-poor', text: 'Long payback - High risk', tooltip: 'Extended recovery period - higher execution risk' };
+            }
+
+            document.getElementById('paybackComparison').innerHTML = `
+                <!-- Projection Ribbon -->
+                <div class="metrics-ribbon">
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">3-Year Profit</div>
+                        <div class="ribbon-metric-value">${formatCurrency(year3)}</div>
+                    </div>
+                    <div class="liquid-glass-box" style="margin: 0;">
+                        <div class="quick-metric-label" style="margin-bottom: 8px;">5-Year Profit</div>
+                        <div class="quick-metric-value" style="font-size: 28px;">${formatCurrency(year5)}</div>
+                    </div>
+                    <div class="ribbon-metric">
+                        <div class="ribbon-metric-label">Annual Return</div>
+                        <div class="ribbon-metric-value">${annualReturn.toFixed(1)}%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; font-size: 15px; text-align: center;">
+                    <span class="comparison-status ${recommendation.class}">${recommendation.text}</span>
+                    <div style="margin-top: 10px; font-size: 13px; color: #999;">${recommendation.tooltip}</div>
+                </div>
+            `;
+        }
+
+        // Allow Enter key to calculate on active calculator
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeCalc = document.querySelector('.calculator-module.active');
+                const calcId = activeCalc.id;
+                
+                if (calcId === 'futureValue') calculateFutureValue();
+                else if (calcId === 'dealROI') calculateDealROI();
+                else if (calcId === 'breakeven') calculateBreakeven();
+                else if (calcId === 'valuation') calculateValuation();
+                else if (calcId === 'payback') calculatePayback();
+            }
+        });
+
+        // Detect user country on page load
+        detectUserCountry();
+
+        // ========== DEAL MEMORY & SAVE SYSTEM ==========
+        let savedDeals = JSON.parse(localStorage.getItem('alight_saved_deals') || '[]');
+        let currentScenario = 'base';
+        window.originalDealValues = null;
+        window.originalGrowthValue = null;
+
+        function saveDeal() {
+            const activeCalc = document.querySelector('.calculator-module.active');
+            if (!activeCalc) return;
+
+            const dealName = prompt('Name this deal:', `Deal - ${new Date().toLocaleDateString()}`);
+            if (!dealName) return;
+
+            const calcType = activeCalc.id;
+            const deal = {
+                id: Date.now(),
+                name: dealName,
+                type: calcType,
+                industry: document.getElementById('industrySelect').value,
+                market: userMarket,
+                timestamp: new Date().toISOString(),
+                displayDate: new Date().toLocaleString(),
+                data: extractDealData(calcType)
+            };
+
+            savedDeals.unshift(deal);
+            if (savedDeals.length > 50) savedDeals = savedDeals.slice(0, 50);
+            localStorage.setItem('alight_saved_deals', JSON.stringify(savedDeals));
+            
+            showNotification(`✓ Saved: ${dealName}`);
+            renderSavedDeals();
+        }
+
+        function extractDealData(calcType) {
+            const data = {};
+            if (calcType === 'futureValue') {
+                data.currentValue = document.getElementById('currentValue').value;
+                data.growthRate = document.getElementById('growthRate').value;
+                data.years = document.getElementById('years').value;
+                data.result = document.getElementById('futureValueAmount')?.textContent || 'Not calculated';
+            } else if (calcType === 'dealROI') {
+                data.purchasePrice = document.getElementById('purchasePrice').value;
+                data.ebitda = document.getElementById('ebitda').value;
+                data.exitYears = document.getElementById('exitYears').value;
+                data.exitMultiple = document.getElementById('exitMultiple').value;
+                data.result = document.getElementById('irrValue')?.textContent || 'Not calculated';
+            } else if (calcType === 'valuation') {
+                data.revenue = document.getElementById('revenue').value;
+                data.valuationEbitda = document.getElementById('valuationEbitda').value;
+                data.result = document.getElementById('companyValue')?.textContent || 'Not calculated';
+            }
+            return data;
+        }
+
+        function loadDeal(dealId) {
+            const deal = savedDeals.find(d => d.id === dealId);
+            if (!deal) return;
+
+            // Switch calculator
+            const calcMap = {
+                'futureValue': 0,
+                'dealROI': 1,
+                'valuation': 3
+            };
+            const navButtons = document.querySelectorAll('.nav-btn');
+            if (navButtons[calcMap[deal.type]]) {
+                navButtons[calcMap[deal.type]].click();
+            }
+
+            // Populate fields
+            setTimeout(() => {
+                document.getElementById('industrySelect').value = deal.industry;
+                Object.keys(deal.data).forEach(key => {
+                    if (key !== 'result') {
+                        const input = document.getElementById(key);
+                        if (input) input.value = deal.data[key];
+                    }
+                });
+                showNotification(`✓ Loaded: ${deal.name}`);
+                toggleSavedDeals();
+            }, 100);
+        }
+
+        function deleteDeal(dealId, event) {
+            event.stopPropagation();
+            if (!confirm('Delete this deal?')) return;
+            
+            savedDeals = savedDeals.filter(d => d.id !== dealId);
+            localStorage.setItem('alight_saved_deals', JSON.stringify(savedDeals));
+            renderSavedDeals();
+            showNotification('Deal deleted');
+        }
+
+        function renderSavedDeals() {
+            const container = document.getElementById('savedDealsContainer');
+            if (!container) return;
+
+            if (savedDeals.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #666;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+                        <div style="font-size: 15px; color: #999;">No saved deals yet</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = savedDeals.map(deal => `
+                <div class="saved-deal-item" onclick="loadDeal(${deal.id})" style="position: relative;">
+                    <div class="saved-deal-name">${deal.name}</div>
+                    <div class="saved-deal-meta">
+                        <span>${deal.industry.replace('-', ' ')} • ${deal.market}</span>
+                        <span>${deal.displayDate.split(',')[0]}</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 13px; color: #ffffff; font-weight: 500;">
+                        ${deal.data.result}
+                    </div>
+                    <button onclick="deleteDeal(${deal.id}, event)" style="position: absolute; top: 12px; right: 12px; background: rgba(255,0,0,0.2); border: 1px solid rgba(255,0,0,0.3); border-radius: 6px; padding: 4px 8px; color: #ff6b6b; font-size: 11px; cursor: pointer;">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleSavedDeals() {
+            const panel = document.getElementById('savedDealsPanel');
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) {
+                renderSavedDeals();
+            }
+        }
+
+        // ========== SCENARIO ANALYSIS ==========
+        function switchScenario(scenario) {
+            currentScenario = scenario;
+            
+            // Update active button
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(scenario)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Recalculate with scenario adjustments
+            const activeCalc = document.querySelector('.calculator-module.active');
+            if (!activeCalc) return;
+
+            if (activeCalc.id === 'dealROI') {
+                applyDealROIScenario(scenario);
+            } else if (activeCalc.id === 'futureValue') {
+                applyFutureValueScenario(scenario);
+            }
+        }
+
+        function applyDealROIScenario(scenario) {
+            const baseMultiple = parseFloat(document.getElementById('exitMultiple').value.replace(/,/g, '')) || 12;
+            const baseEbitda = parseFloat(document.getElementById('ebitda').value.replace(/,/g, '')) || 5000000;
+            
+            // Store original values on first use
+            if (!window.originalDealValues) {
+                window.originalDealValues = {
+                    exitMultiple: baseMultiple,
+                    ebitda: baseEbitda
+                };
+            }
+
+            let multiple = window.originalDealValues.exitMultiple;
+            let ebitda = window.originalDealValues.ebitda;
+            
+            if (scenario === 'bull') {
+                multiple *= 1.3; // +30%
+                ebitda *= 1.15; // +15% EBITDA growth
+            } else if (scenario === 'bear') {
+                multiple *= 0.75; // -25%
+                ebitda *= 0.90; // -10% EBITDA decline
+            }
+
+            document.getElementById('exitMultiple').value = multiple.toFixed(1);
+            document.getElementById('ebitda').value = Math.round(ebitda).toLocaleString();
+            
+            calculateDealROI();
+        }
+
+        function applyFutureValueScenario(scenario) {
+            const baseGrowth = parseFloat(document.getElementById('growthRate').value.replace(/,/g, '')) || 10;
+            
+            // Store original value on first use
+            if (!window.originalGrowthValue) {
+                window.originalGrowthValue = baseGrowth;
+            }
+
+            let growth = window.originalGrowthValue;
+            
+            if (scenario === 'bull') {
+                growth *= 1.4; // +40%
+            } else if (scenario === 'bear') {
+                growth *= 0.65; // -35%
+            }
+
+            document.getElementById('growthRate').value = growth.toFixed(1);
+            calculateFutureValue();
+        }
+
+        function resetToBase() {
+            if (window.originalDealValues) {
+                document.getElementById('exitMultiple').value = window.originalDealValues.exitMultiple;
+                document.getElementById('ebitda').value = window.originalDealValues.ebitda.toLocaleString();
+                delete window.originalDealValues;
+            }
+            if (window.originalGrowthValue) {
+                document.getElementById('growthRate').value = window.originalGrowthValue;
+                delete window.originalGrowthValue;
+            }
+            currentScenario = 'base';
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes('base')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Recalculate
+            const activeCalc = document.querySelector('.calculator-module.active');
+            if (activeCalc) {
+                if (activeCalc.id === 'dealROI') calculateDealROI();
+                else if (activeCalc.id === 'futureValue') calculateFutureValue();
+                else if (activeCalc.id === 'valuation') calculateValuation();
+            }
+            
+            showNotification('Reset to base case');
+        }
+
+        // ========== EXPORT TO MEMO ==========
+        function exportToMemo() {
+            const activeCalc = document.querySelector('.calculator-module.active');
+            if (!activeCalc) return;
+
+            const calcType = activeCalc.id;
+            const data = extractDealData(calcType);
+            const industry = document.getElementById('industrySelect').value;
+            
+            const memo = `
+INVESTMENT MEMORANDUM
+═══════════════════════════════════════════════
+
+Date: ${new Date().toLocaleString()}
+Market: ${userMarket}
+Industry: ${industry.replace('-', ' ').toUpperCase()}
+Calculator: ${calcType.replace(/([A-Z])/g, ' $1').trim()}
+
+DEAL INPUTS
+───────────────────────────────────────────────
+${Object.entries(data).filter(([k]) => k !== 'result').map(([k, v]) => 
+    `${k.replace(/([A-Z])/g, ' $1').trim()}: ${v}`
+).join('\n')}
+
+CALCULATED RESULT
+───────────────────────────────────────────────
+${data.result}
+
+SCENARIO ANALYSIS
+───────────────────────────────────────────────
+Current Scenario: ${currentScenario.toUpperCase()}
+
+MARKET CONTEXT
+───────────────────────────────────────────────
+Geographic Market: ${userMarket}
+Local Market Conditions: Applied
+
+═══════════════════════════════════════════════
+Generated by Alight Financial Calculator
+Confidential - Not for distribution
+            `.trim();
+
+            // Download as text file
+            const blob = new Blob([memo], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Investment_Memo_${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('✓ Memo exported');
+        }
+
+        // ========== NOTIFICATIONS ==========
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.textContent = message;
+            notif.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.95));
+                color: #000;
+                padding: 16px 24px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 510;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease, slideOutRight 0.3s ease 2.5s;
+                backdrop-filter: blur(20px);
+            `;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSavedDeals();
+        });
+    </script>
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
+    </script>
+</body>
+</html>
